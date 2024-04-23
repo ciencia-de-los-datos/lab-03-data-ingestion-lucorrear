@@ -16,15 +16,17 @@ def ingest_data():
     file_path = 'clusters_report.txt'
     data = []
     with open(file_path, 'r') as file:
-        lines = file.readlines()[2:]
+        lines = file.readlines()
         for line in lines:
-            if line[0].isdigit():
+            if line.strip() and not line.startswith('-'):
                 columns = line.split()
                 cluster = int(columns[0])
                 cantidad_palabras = int(columns[1])
-                porcentaje_palabras = float(columns[3].strip('%'))
-                palabras_clave = ', '.join(columns[4:]).replace(',', ', ')
+                porcentaje_palabras = float(columns[3].strip('%').replace(',', '.')) 
+                palabras_clave = ', '.join(columns[4:])
                 data.append([cluster, cantidad_palabras, porcentaje_palabras, palabras_clave])
     df = pd.DataFrame(data, columns=['cluster', 'cantidad_de_palabras', 'porcentaje_de_palabras', 'palabras_clave'])
     return df
 df = ingest_data()
+print(df.head())
+
