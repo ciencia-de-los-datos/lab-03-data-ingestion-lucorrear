@@ -11,22 +11,32 @@ espacio entre palabra y palabra.
 """
 import pandas as pd
 
-
 def ingest_data():
+    # Definir el nombre del archivo
     file_path = 'clusters_report.txt'
-    data = []
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        for line in lines:
-            if line.strip() and not line.startswith('-'):
-                columns = line.split()
-                cluster = int(columns[0])
-                cantidad_palabras = int(columns[1])
-                porcentaje_palabras = float(columns[3].strip('%').replace(',', '.')) 
-                palabras_clave = ', '.join(columns[4:])
-                data.append([cluster, cantidad_palabras, porcentaje_palabras, palabras_clave])
-    df = pd.DataFrame(data, columns=['cluster', 'cantidad_de_palabras', 'porcentaje_de_palabras', 'palabras_clave'])
-    return df
-df = ingest_data()
-print(df.head())
 
+    # Lista para almacenar los datos procesados
+    data = []
+
+    # Leer el archivo y procesar los datos
+    with open(file_path, 'r') as file:
+        # Saltar las primeras dos líneas y la línea del separador de guiones
+        next(file)
+        next(file)
+        next(file)
+        for line in file:
+            # Dividir la línea en columnas
+            columns = line.split(maxsplit=3)
+            # Obtener los datos de las columnas
+            cluster = columns[0]
+            cantidad_palabras = columns[1]
+            porcentaje_palabras = columns[2].replace(',', '.').strip('%')
+            palabras_clave = ', '.join(columns[3].split())
+            # Agregar los datos procesados a la lista
+            data.append([cluster, cantidad_palabras, porcentaje_palabras, palabras_clave])
+
+    # Crear el DataFrame de Pandas
+    df = pd.DataFrame(data, columns=['cluster', 'cantidad_de_palabras', 'porcentaje_de_palabras', 'palabras_clave'])
+
+    # Devolver el DataFrame
+    return df
