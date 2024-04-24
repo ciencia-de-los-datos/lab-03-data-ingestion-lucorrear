@@ -16,10 +16,18 @@ def ingest_data():
     df = pd.read_fwf('clusters_report.txt', 
                     colspecs="infer", 
                     widths=[9, 16, 16, 80], 
-                    header=None, names=["cluster", "cantidad_de_palabras_clave", "porcentaje_de_palabras_clave", "principales_palabras_clave"],
+                    header=None, 
+                    names=["cluster", "cantidad_de_palabras_clave", "porcentaje_de_palabras_clave", "principales_palabras_clave"],
                     converters={"porcentaje_de_palabras_clave": lambda x: x.rstrip(" %").replace(",", ".")}
-                    ).drop(index={0,1,2}).ffill()   
-    df.columns = df.columns.str.lower()
-    df.columns = df.columns.str.replace('', '_')
+                    )
+    
+    # Elimina las filas de encabezado y las filas vacías
+    df = df.drop(index=[0, 1, 2])
+    
+    # Rellena los valores faltantes hacia adelante (ffill)
+    df = df.ffill()
+    
+    # Reemplaza los espacios en los nombres de las columnas por guiones bajos y convierte a minúsculas
+    df.columns = df.columns.str.lower().str.replace(' ', '_')
+
     return df
-df = ingest_data()
