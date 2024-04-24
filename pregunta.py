@@ -23,4 +23,3 @@ def ingest_data():
     df.columns = df.columns.str.replace('', '_')
     return df
 df = ingest_data()
-print(df)
