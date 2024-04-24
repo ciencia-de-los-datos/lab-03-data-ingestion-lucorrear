@@ -36,3 +36,5 @@ def ingest_data():
     df['principales_palabras_clave'] = df['principales_palabras_clave'].apply(lambda x: re.sub(r'\s*,\s*', ', ', x))
 
     return df
+df = ingest_data()
+print(df)
